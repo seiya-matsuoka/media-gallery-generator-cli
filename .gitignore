@@ -1,0 +1,72 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Eclipse
+.project
+.classpath
+.settings
+.metadata
+
+# Idea
+.idea
+*.iml
+*.iws
+*.ipr
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Gradle
+.gradle
+gradle-app.setting
+gradle-app.properties
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+.gradletasknamecache
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/
+!.mvn/wrapper/
+!.mvn/wrapper/maven-wrapper.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Build
+out
+build/
+bin/
+
+# Other
+.env
+.env.*
+application.properties
+application-*.properties
+*.log
+*.swp
+*.bak
+.vscode/
+HELP.md
+
+# ===== Local-only outputs for this project =====
+dist/
+media/
+gallery.config.json
