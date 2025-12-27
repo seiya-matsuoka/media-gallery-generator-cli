@@ -67,6 +67,6 @@ application-*.properties
 HELP.md
 
 # ===== Local-only outputs for this project =====
-dist/
-media/
-gallery.config.json
+/dist/
+/media/
+/config/gallery.config.json
