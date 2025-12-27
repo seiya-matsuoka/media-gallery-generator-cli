@@ -4,6 +4,9 @@ import com.example.gallery.config.AppConfig;
 import com.example.gallery.config.ConfigLoader;
 import com.example.gallery.config.ConfigValidationException;
 import com.example.gallery.domain.MediaItem;
+import com.example.gallery.output.OutputPaths;
+import com.example.gallery.output.OutputPreparationException;
+import com.example.gallery.output.OutputPreparer;
 import com.example.gallery.scan.MediaScanException;
 import com.example.gallery.scan.MediaScanner;
 import java.io.IOException;
@@ -43,6 +46,14 @@ public class BuildCommand implements Callable<Integer> {
       System.out.printf("  extensions: %s%n", cfg.includeExtensions());
       System.out.printf("  clean: %s%n", clean);
 
+      // 出力先準備（--clean対応 + パス安全チェック + dist/assets作成）
+      OutputPaths out = OutputPreparer.prepare(cfg.inputDir(), cfg.outputDir(), clean);
+      System.out.println();
+      System.out.println("build: 出力先の準備が完了しました");
+      System.out.printf("  dist: %s%n", out.outputDir());
+      System.out.printf("  assets: %s%n", out.assetsDir());
+      System.out.printf("  index: %s%n", out.indexHtmlPath());
+
       List<MediaItem> items =
           MediaScanner.scan(cfg.inputDir(), cfg.includeExtensions(), cfg.sort());
 
@@ -60,6 +71,10 @@ public class BuildCommand implements Callable<Integer> {
       }
 
       return 0;
+    } catch (OutputPreparationException e) {
+      System.err.println("build: 出力先の準備に失敗しました");
+      System.err.println("  " + e.getMessage());
+      return 1;
     } catch (ConfigValidationException e) {
       System.err.println("build: 設定が不正です");
       System.err.println("  " + e.getMessage());
