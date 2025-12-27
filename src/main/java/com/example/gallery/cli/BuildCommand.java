@@ -11,7 +11,10 @@ import picocli.CommandLine.Option;
 @Command(name = "build", description = "dist/index.html と dist/assets を生成する。")
 public class BuildCommand implements Runnable {
 
-  @Option(names = "--config", description = "設定ファイルのパス", defaultValue = "./gallery.config.json")
+  @Option(
+      names = "--config",
+      description = "設定ファイルのパス",
+      defaultValue = "./config/gallery.config.json")
   private String config;
 
   @Option(names = "--clean", description = "ビルド前に dist を削除してから生成する")
