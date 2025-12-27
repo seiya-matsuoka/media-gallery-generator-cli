@@ -19,7 +19,7 @@ public class InitCommand implements Callable<Integer> {
   @Option(
       names = "--path",
       description = "出力先のパス（省略時: ${DEFAULT-VALUE}）",
-      defaultValue = "./config/gallery.config.json")
+      defaultValue = "./work/gallery.config.json")
   private Path path;
 
   @Option(names = "--force", description = "既存ファイルがあっても上書きする")
