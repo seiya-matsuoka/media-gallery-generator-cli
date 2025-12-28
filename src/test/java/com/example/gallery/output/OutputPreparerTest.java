@@ -23,7 +23,7 @@ class OutputPreparerTest {
     Files.writeString(output.resolve("old.txt"), "old");
 
     // clean=true を検証
-    OutputPaths paths = OutputPreparer.prepare(input, output, true);
+    OutputPaths paths = OutputPreparer.prepare(input, output, true, tempDir);
 
     assertTrue(Files.isDirectory(paths.outputDir()));
     assertTrue(Files.isDirectory(paths.assetsDir()));
