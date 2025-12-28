@@ -4,6 +4,8 @@ import com.example.gallery.config.AppConfig;
 import com.example.gallery.config.ConfigLoader;
 import com.example.gallery.config.ConfigValidationException;
 import com.example.gallery.domain.MediaItem;
+import com.example.gallery.output.AssetCopier;
+import com.example.gallery.output.AssetCopyException;
 import com.example.gallery.output.OutputPaths;
 import com.example.gallery.output.OutputPreparationException;
 import com.example.gallery.output.OutputPreparer;
@@ -70,6 +72,13 @@ public class BuildCommand implements Callable<Integer> {
             item.lastModifiedAt());
       }
 
+      // assets へコピー（相対構造維持）
+      int copied = AssetCopier.copyAll(items, out.assetsDir());
+
+      System.out.println();
+      System.out.printf("build: assets へのコピーが完了しました（件数: %d）%n", copied);
+      System.out.printf("  assets: %s%n", out.assetsDir());
+
       return 0;
     } catch (OutputPreparationException e) {
       System.err.println("build: 出力先の準備に失敗しました");
@@ -81,6 +90,10 @@ public class BuildCommand implements Callable<Integer> {
       return 1;
     } catch (MediaScanException e) {
       System.err.println("build: 入力フォルダの走査に失敗しました");
+      System.err.println("  " + e.getMessage());
+      return 1;
+    } catch (AssetCopyException e) {
+      System.err.println("build: assets へのコピーに失敗しました");
       System.err.println("  " + e.getMessage());
       return 1;
     } catch (IOException e) {
