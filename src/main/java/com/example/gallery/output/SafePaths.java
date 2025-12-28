@@ -7,7 +7,7 @@ import java.nio.file.Path;
  *
  * <ul>
  *   <li>inputDir と outputDir の包含関係・同一パスの禁止
- *   <li>削除対象がプロジェクト（カレント）配下であることの確認
+ *   <li>削除対象が許可ルート配下であることの確認
  * </ul>
  */
 public final class SafePaths {
@@ -54,18 +54,32 @@ public final class SafePaths {
   }
 
   /**
-   * --clean 等で削除するディレクトリが、カレントディレクトリ配下であることを検証する。
-   *
-   * <p>誤ったパス指定でプロジェクト外を削除しないための安全ガード。
+   * 削除対象ディレクトリが、許可ルート配下であることを検証する。
    *
    * @param directoryToDelete 削除対象（絶対パス・正規化済みを推奨）
-   * @throws OutputPreparationException プロジェクト外の場合
+   * @param allowedRoot 削除を許可する基準ディレクトリ（絶対パス・正規化済みを推奨）
+   * @throws OutputPreparationException 許可ルート外の場合
+   */
+  public static void validateDeleteTargetIsUnder(Path directoryToDelete, Path allowedRoot) {
+    Path absDir = directoryToDelete.toAbsolutePath().normalize();
+    Path absRoot = allowedRoot.toAbsolutePath().normalize();
+    if (!absDir.startsWith(absRoot)) {
+      throw new OutputPreparationException(
+          "--clean で削除しようとしたディレクトリが許可ルート配下ではありません: dir=" + absDir + ", root=" + absRoot);
+    }
+  }
+
+  /**
+   * ショートカット用：削除対象ディレクトリがカレントディレクトリ（プロジェクト）配下であることを検証する。
+   *
+   * <p>内部的には {@link #validateDeleteTargetIsUnder(Path, Path)} に対して allowedRoot
+   * としてカレントディレクトリを渡すのと同等。 CLI実行時に「プロジェクト外の削除」を禁止する用途で使うことを想定する。
+   *
+   * @param directoryToDelete 削除対象ディレクトリ（絶対パス・正規化済みを推奨）
+   * @throws OutputPreparationException カレントディレクトリ配下ではない場合
    */
   public static void validateDeleteTargetIsUnderCwd(Path directoryToDelete) {
     Path cwd = Path.of(".").toAbsolutePath().normalize();
-    if (!directoryToDelete.startsWith(cwd)) {
-      throw new OutputPreparationException(
-          "--clean で削除しようとしたディレクトリがプロジェクト配下ではありません: " + directoryToDelete);
-    }
+    validateDeleteTargetIsUnder(directoryToDelete, cwd);
   }
 }
