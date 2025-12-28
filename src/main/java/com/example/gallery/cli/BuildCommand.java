@@ -9,9 +9,14 @@ import com.example.gallery.output.AssetCopyException;
 import com.example.gallery.output.OutputPaths;
 import com.example.gallery.output.OutputPreparationException;
 import com.example.gallery.output.OutputPreparer;
+import com.example.gallery.render.HtmlGalleryRenderer;
+import com.example.gallery.render.HtmlTemplateLoader;
+import com.example.gallery.render.HtmlWriteException;
 import com.example.gallery.scan.MediaScanException;
 import com.example.gallery.scan.MediaScanner;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -79,6 +84,19 @@ public class BuildCommand implements Callable<Integer> {
       System.out.printf("build: assets へのコピーが完了しました（件数: %d）%n", copied);
       System.out.printf("  assets: %s%n", out.assetsDir());
 
+      // index.html 生成（テンプレ読込 → レンダ → 書き込み）
+      try {
+        String template = HtmlTemplateLoader.loadUtf8("/templates/index.html");
+        String html = HtmlGalleryRenderer.render(template, "Media Gallery", items);
+        Files.writeString(out.indexHtmlPath(), html, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        throw new HtmlWriteException("index.html の生成に失敗しました: " + out.indexHtmlPath(), e);
+      }
+
+      System.out.println();
+      System.out.println("build: index.html の生成が完了しました");
+      System.out.printf("  index: %s%n", out.indexHtmlPath());
+
       return 0;
     } catch (OutputPreparationException e) {
       System.err.println("build: 出力先の準備に失敗しました");
@@ -94,6 +112,10 @@ public class BuildCommand implements Callable<Integer> {
       return 1;
     } catch (AssetCopyException e) {
       System.err.println("build: assets へのコピーに失敗しました");
+      System.err.println("  " + e.getMessage());
+      return 1;
+    } catch (HtmlWriteException e) {
+      System.err.println("build: HTML生成に失敗しました");
       System.err.println("  " + e.getMessage());
       return 1;
     } catch (IOException e) {
