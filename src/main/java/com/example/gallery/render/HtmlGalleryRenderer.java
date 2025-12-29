@@ -33,6 +33,10 @@ public final class HtmlGalleryRenderer {
   }
 
   private static String renderCards(List<MediaItem> items) {
+    if (items == null || items.isEmpty()) {
+      return "<p class=\"meta\" style=\"grid-column: 1 / -1;\">メディアがありません</p>\n";
+    }
+
     StringBuilder sb = new StringBuilder();
     for (MediaItem item : items) {
       String rel = item.relativePath().toString().replace('\\', '/');

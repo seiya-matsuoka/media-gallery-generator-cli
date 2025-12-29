@@ -87,7 +87,7 @@ public class BuildCommand implements Callable<Integer> {
       // index.html 生成（テンプレ読込 → レンダ → 書き込み）
       try {
         String template = HtmlTemplateLoader.loadUtf8("/templates/index.html");
-        String html = HtmlGalleryRenderer.render(template, "Media Gallery", items);
+        String html = HtmlGalleryRenderer.render(template, cfg.title(), items);
         Files.writeString(out.indexHtmlPath(), html, StandardCharsets.UTF_8);
       } catch (IOException e) {
         throw new HtmlWriteException("index.html の生成に失敗しました: " + out.indexHtmlPath(), e);
