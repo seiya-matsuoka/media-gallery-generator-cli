@@ -80,4 +80,14 @@ class HtmlGalleryRendererTest {
     assertTrue(html.contains("assets/a&amp;b.jpg"));
     assertTrue(html.contains("a&amp;b.jpg"));
   }
+
+  // items が0件のとき、空状態のメッセージが出力されることを確認する
+  @Test
+  void rendersEmptyMessageWhenNoItems() {
+    String template = "<div class=\"grid\">{{ITEMS}}</div>";
+    String html = HtmlGalleryRenderer.render(template, "Title", List.of());
+
+    assertTrue(html.contains("メディアがありません"));
+    assertFalse(html.contains("{{ITEMS}}"));
+  }
 }
