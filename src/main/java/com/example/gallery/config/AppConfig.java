@@ -10,4 +10,4 @@ import java.util.List;
  * <p>input/output は config ファイルの場所を基準に相対解決された {@link Path} を保持する。
  */
 public record AppConfig(
-    Path inputDir, Path outputDir, List<String> includeExtensions, SortMode sort) {}
+    String title, Path inputDir, Path outputDir, List<String> includeExtensions, SortMode sort) {}

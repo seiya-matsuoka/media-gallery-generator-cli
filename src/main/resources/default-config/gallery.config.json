@@ -1,4 +1,5 @@
 {
+  "title": "Media Gallery",
   "inputDir": "./media",
   "outputDir": "./dist",
   "includeExtensions": ["jpg", "jpeg", "png", "gif", "webp", "mp4"],

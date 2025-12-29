@@ -43,6 +43,8 @@ public final class ConfigLoader {
       throw new ConfigValidationException("設定ファイルの読み込みに失敗しました（JSON形式を確認してください）: " + e.getMessage());
     }
 
+    String title = normalizeTitle(raw.title);
+
     String inputDirStr = required(raw.inputDir, "inputDir");
     String outputDirStr = required(raw.outputDir, "outputDir");
 
@@ -64,7 +66,15 @@ public final class ConfigLoader {
       }
     }
 
-    return new AppConfig(inputDir, outputDir, extensions, sort);
+    return new AppConfig(title, inputDir, outputDir, extensions, sort);
+  }
+
+  private static String normalizeTitle(String title) {
+    if (title == null) {
+      return "Media Gallery";
+    }
+    String trimmed = title.trim();
+    return trimmed.isEmpty() ? "Media Gallery" : trimmed;
   }
 
   private static String required(String value, String fieldName) {
@@ -90,6 +100,7 @@ public final class ConfigLoader {
 
   /** JSONを受けるための中間モデル（そのままの値を受け取る） */
   private static class RawConfig {
+    public String title;
     public String inputDir;
     public String outputDir;
     public List<String> includeExtensions;
