@@ -24,6 +24,8 @@
 Thumbs.db
 .idea
 .vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 !.vscode/extensions.json
 
 # Gradle
@@ -63,10 +65,16 @@ application-*.properties
 *.log
 *.swp
 *.bak
-.vscode/
 HELP.md
 
 # ===== Local-only outputs for this project =====
-/work/media/
-/work/dist/
-/work/gallery.config.json
+work/**
+
+!work/media/
+!work/media/sample-01.jpg
+!work/media/sample-02.jpg
+
+!work/dist/
+!work/dist/.gitkeep
+!work/dist/assets/
+!work/dist/assets/.gitkeep
