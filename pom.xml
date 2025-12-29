@@ -48,6 +48,14 @@
                     <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <mainClass>com.example.gallery.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
