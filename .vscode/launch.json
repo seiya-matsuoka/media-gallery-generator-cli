@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ヘルプ表示の確認
+    // - picocli の `--help` が表示されることを確認する
+    {
+      "type": "java",
+      "name": "Gallery: help",
+      "request": "launch",
+      "mainClass": "com.example.gallery.Main",
+      "args": "--help"
+    },
+    // 設定ファイル生成の確認
+    // - `init` サブコマンドが起動できることを確認する
+    {
+      "type": "java",
+      "name": "Gallery: init",
+      "request": "launch",
+      "mainClass": "com.example.gallery.Main",
+      "args": "init"
+    },
+    // dist全消し→生成の確認
+    // - `build` サブコマンドに引数（--clean, --config）が渡ることを確認する
+    {
+      "type": "java",
+      "name": "Gallery: build (clean)",
+      "request": "launch",
+      "mainClass": "com.example.gallery.Main",
+      "args": "build --clean --config ./work/gallery.config.json"
+    }
+  ]
+}

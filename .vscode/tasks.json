@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "mvn: test",
+      "type": "shell",
+      "command": "mvn -q test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "mvn: package",
+      "type": "shell",
+      "command": "mvn -q package",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "gallery: help",
+      "type": "shell",
+      "command": ".\\gallery.cmd --help",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "gallery: init",
+      "type": "shell",
+      "command": ".\\gallery.cmd init",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "gallery: build (--clean)",
+      "type": "shell",
+      "command": ".\\gallery.cmd build --clean --config ./work/gallery.config.json",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
