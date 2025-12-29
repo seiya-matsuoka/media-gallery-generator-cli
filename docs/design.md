@@ -74,3 +74,64 @@
 - `HtmlGalleryRenderer`: HTML テンプレに `{{TITLE}}/{{GENERATED_AT}}/{{ITEMS}}` を差し込み、HTML 文字列を返す。
 
 ---
+
+## 4. 詳細フロー
+
+### 4.1 設定ロード（ConfigLoader）
+
+- 設定ファイルの存在・種別チェック後、Jackson `ObjectMapper` で `RawConfig` を読み込む。
+- `title` が未指定/空なら `"Media Gallery"` が入る。
+- `inputDir/outputDir` は **設定ファイルの場所基準**で `Path` に解決する。
+- `includeExtensions` は trim / `.`除去 / 小文字化 / distinct で正規化し、空ならエラーにする。
+- `sort` は `SortMode.from` で解決し、不正なら`ConfigValidationException` にする。
+
+### 4.2 出力準備（OutputPreparer / SafePaths）
+
+`BuildCommand` は `OutputPreparer.prepare(input, output, clean)` を呼ぶ。  
+`OutputPreparer` は以下を担当する：
+
+- `SafePaths.validateInputAndOutputPaths(...)` による安全チェック（包含関係禁止など）
+- `--clean` のとき、削除対象が安全な範囲にあることを検証してから削除する設計（SafePaths）
+- `dist/` と `dist/assets/` を作成し、`OutputPaths` を返す。
+
+### 4.3 走査（MediaScanner）
+
+`MediaScanner.scan` は、**walk → フィルタ → メタ情報取得 → ソート**を一括で行う。
+
+- walk: `Files.walk` で再帰走査
+- filter: 通常ファイルのみを対象にし、拡張子フィルタ（`MediaFilter`）を適用
+- metadata: サイズ/更新日時を取得し `MediaItem` に格納
+- sort: `SortMode` に従ってソート
+
+拡張子判定は `MediaFilter.matchExtension` が担い、`.JPG` → `jpg` のように正規化する。
+
+### 4.4 実体コピー（AssetCopier）
+
+`AssetCopier.copyAll(items, assetsDir)` は `assetsDir/relativePath` にコピーする。  
+安全対策として、
+
+- `relativePath` が絶対パスなら拒否
+- 正規化後に `assetsDir` 外へ出る（`..` 等）ケースを拒否
+- `.` を含むパス要素も拒否
+
+### 4.5 HTML 生成（HtmlTemplateLoader / HtmlGalleryRenderer）
+
+- テンプレ読込は `HtmlTemplateLoader.loadUtf8("/templates/index.html")` 。
+- `HtmlGalleryRenderer.render` はテンプレの `{{TITLE}}/{{GENERATED_AT}}/{{ITEMS}}` を置換し、HTML 文字列を返す。
+- `items` が 0 件のときは「メディアがありません」を出す。
+
+---
+
+## 5. エラー設計（例外の方針）
+
+基本方針は「責務単位で例外型を分け、CLI 側で握ってメッセージ化」。
+
+- config: `ConfigValidationException`
+- scan: `MediaScanException`
+- output: `OutputPreparationException`
+- render: `HtmlWriteException`
+
+`BuildCommand` 自体は `Callable<Integer>` で、picocli から終了コードとして扱える構造。  
+また `Main` は、その終了コードで `System.exit` する。
+
+---
