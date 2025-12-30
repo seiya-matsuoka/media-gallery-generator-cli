@@ -135,3 +135,66 @@ CLI コマンドは picocli で実装されている。
 ```
 
 ---
+
+## 6. 設定ファイル仕様（gallery.config.json）
+
+`gallery init` で生成されるデフォルトは次の形（例）。
+
+```json
+{
+  "title": "Media Gallery",
+  "inputDir": "./media",
+  "outputDir": "./dist",
+  "includeExtensions": ["jpg", "jpeg", "png", "gif", "webp", "mp4"],
+  "sort": "modified_desc"
+}
+```
+
+### 6.1 各キーの意味
+
+- `title`（string）  
+  生成する HTML のタイトル/見出し
+- `inputDir`（string）  
+  入力ディレクトリ（設定ファイル基準の相対パス OK）
+- `outputDir`（string）  
+  出力ディレクトリ（設定ファイル基準の相対パス OK）
+- `includeExtensions`（string[]）  
+  対象拡張子。`.JPG` のような表記も内部で正規化される（`.`除去・小文字化）。
+- `sort`（string）  
+  ソート指定（例：`modified_desc`）
+
+### 6.2 メディア種別の扱い
+
+- `mp4` → 動画として扱い、HTML では `<video>` で出力
+- それ以外 → 画像として扱い、HTML では `<img>` で出力
+
+---
+
+## 7. 出力仕様
+
+`outputDir`（デフォルト：`work/dist`）配下に生成される。
+
+- `dist/index.html`  
+  ギャラリー本体（テンプレに `{{TITLE}}`, `{{GENERATED_AT}}`, `{{ITEMS}}` を差し込み）
+- `dist/assets/`  
+  入力ファイルの実体コピー先（相対構造維持）
+
+### 7.1 `--clean` について
+
+`--clean` を付けると、ビルド前に `outputDir` を削除して作り直す。  
+事故防止のため、安全条件を満たさないパスは削除しない設計（詳細は `docs/design.md`）。
+
+---
+
+## 8. 成功/失敗の見分け方（ログ）
+
+- `init` 成功例：`init: 設定ファイルを生成しました: ...`
+- `build` 成功時は概ね以下が出ます：
+  - `build: 設定ファイルの読み込みに成功しました`
+  - `build: メディア走査が完了しました...`
+  - `build: assets へのコピーが完了しました...`
+  - `build: index.html の生成が完了しました`
+
+失敗時は `build:` / `init:` のエラーメッセージが `stderr` に出力され、終了コード `1` になる。
+
+---
