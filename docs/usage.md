@@ -37,3 +37,101 @@
 > そのため、`gallery.config.json` の `inputDir: "./media"` は `work/media` を指す。
 
 ---
+
+## 3. クイックスタート
+
+プロジェクト直下で実行する。
+
+### 3.1 設定ファイルを生成（init）
+
+```powershell
+.\gallery init
+```
+
+- 既に `work/gallery.config.json` がある場合は失敗する
+
+- 上書きしたい場合：
+
+```powershell
+.\gallery init --force
+```
+
+### 3.2 メディアを置く
+
+例：`work/media` 配下に jpg/png/mp4 を配置する。
+
+### 3.3 生成（build）
+
+```powershell
+.\gallery build --clean
+```
+
+成功すると `work/dist/index.html` が生成される。
+
+---
+
+## 4. 実行方法
+
+### 4.1 ラッパー経由（gallery.cmd）
+
+Windows では `.cmd` を同梱しているため、以下で実行できる。
+
+```powershell
+.\gallery --help
+.\gallery init
+.\gallery build --clean
+```
+
+> ※ `gallery.cmd` は内部でプロジェクト直下へ移動し、`mvn -q exec:java` に引数を渡して起動する。
+
+---
+
+## 5. コマンド仕様
+
+CLI コマンドは picocli で実装されている。
+
+```powershell
+.\gallery --help
+```
+
+### 5.1 `init`（設定ファイル生成）
+
+```powershell
+.\gallery init
+```
+
+オプション：
+
+- `--path <path>`  
+  出力先（省略時：`./work/gallery.config.json`）
+- `--force`  
+  既存ファイルがあっても上書きする
+
+例：
+
+```powershell
+.\gallery init --path ./work/gallery.config.json
+.\gallery init --force
+```
+
+### 5.2 `build`（HTML 生成 + assets コピー）
+
+```powershell
+.\gallery build
+```
+
+オプション：
+
+- `--config <path>`  
+  設定ファイル（省略時：`./work/gallery.config.json`）
+- `--clean`  
+  ビルド前に `dist` を削除してから生成する
+
+例：
+
+```powershell
+.\gallery build --clean
+.\gallery build --config ./work/gallery.config.json
+```
+
+---
