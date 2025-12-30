@@ -187,3 +187,50 @@ Windows では `.cmd` を同梱しているため、以下で実行できる。
 事故防止のため、安全条件を満たさないパスは削除しない設計。
 
 ---
+
+## 動作確認
+
+### ラッパー（gallery.cmd）
+
+```powershell
+.\gallery --help
+.\gallery init
+.\gallery build --clean
+```
+
+---
+
+## テスト（Maven）
+
+テスト実行：
+
+```powershell
+mvn test
+```
+
+---
+
+## 技術スタック
+
+- Java：21
+- Build：Maven
+- CLI：picocli
+- Config：Jackson（JSON）
+- Test：JUnit 5（junit-jupiter）
+
+---
+
+## ドキュメント
+
+ドキュメントは `/docs` にまとめています。
+
+- 使い方：[`docs/01_usage.md`](docs/01_usage.md)
+- ディレクトリ構成：[`docs/02_directory-structure.md`](docs/02_directory-structure.md)
+- 設計：[`docs/03_design.md`](docs/03_design.md)
+
+---
+
+## 補足
+
+- `work/` 配下の生成物（`gallery.config.json`, `dist/`, `assets/` など）は基本的に git 管理外です。
+  - ただし、サンプルとして `work/gallery.config.example.json` や `work/media/sample-*.jpg` などは管理対象にしています。
