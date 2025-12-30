@@ -198,3 +198,43 @@ CLI コマンドは picocli で実装されている。
 失敗時は `build:` / `init:` のエラーメッセージが `stderr` に出力され、終了コード `1` になる。
 
 ---
+
+## 9. VS Code での実行/デバッグ
+
+### 9.1 Run and Debug（launch.json）
+
+`Run and Debug` から、以下の構成を実行できる。
+
+- `Gallery: help`
+- `Gallery: init`
+- `Gallery: build (clean)`（`--clean --config ./work/gallery.config.json`）
+
+ブレークポイントを貼って動かしたい場合はここから起動する。
+
+### 9.2 Tasks（tasks.json）
+
+`Terminal` → `Run Task...` からタスクを実行できる。
+
+- `mvn: test`
+- `mvn: package`
+- `gallery: help`
+- `gallery: init`
+- `gallery: build (--clean)`
+
+---
+
+## 10. 動作確認
+
+### 10.1 ラッパー（gallery.cmd）
+
+```powershell
+.\gallery --help
+.\gallery init
+.\gallery build --clean
+```
+
+---
+
+## 11. 注意点
+
+- `--clean` は出力先を削除します。`outputDir` の設定を変更する場合は特に注意してください。
